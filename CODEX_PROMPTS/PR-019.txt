@@ -1,0 +1,13 @@
+Implement `PR-019-HYPER-REALISM-SIMULATOR-1` from `PRS/PR-019-HYPER-REALISM-SIMULATOR-1.md`.
+
+Constraints:
+- Keep the simulator pessimistic rather than optimistic.
+- Make the adverse-selection logic deterministic from provided inputs.
+- Preserve backward readability of replay outputs.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- upgraded simulator
+- local fee realism in gates or execution context
+- updated docs
+- green tests

@@ -1,0 +1,14 @@
+Implement `PR-027-FUNDING-ENTROPY-AND-MEV-VOLUME-STRIP-1` from `PRS/PR-027-FUNDING-ENTROPY-AND-MEV-VOLUME-STRIP-1.md`.
+
+Constraints:
+- Keep deterministic logic only.
+- Preserve missing-data honesty.
+- Do not assume unavailable data is safe.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- funding entropy and shared-funder cluster support
+- MEV-stripped / organic volume handling where available
+- safer smart-money and orderflow quality logic
+- updated docs
+- green tests

@@ -1,0 +1,14 @@
+Implement `PR-013-ANTI-RUG-SOCIALS-POOLAGE-1` from `PRS/PR-013-ANTI-RUG-SOCIALS-POOLAGE-1.md`.
+
+Requirements:
+- modify only the files listed in the PR unless a tiny supporting change is unavoidable
+- keep everything deterministic and free-first
+- do not add auto-execution, wallets, signing, or live trading
+- make all rejection reasons explicit and machine-readable
+- add or update tests so the new paths are covered
+
+Before finishing:
+1. run the relevant tests
+2. summarize changed files
+3. summarize test results
+4. note any thresholds that still need replay calibration

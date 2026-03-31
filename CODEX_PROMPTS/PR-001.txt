@@ -1,0 +1,22 @@
+You are implementing PR-001-DETERMINISTIC-SCORING-CORE-1 in the repository.
+
+Read first:
+- README.md
+- PR_BOOTSTRAP_CHECKLIST.md
+- PRS/PR-001-DETERMINISTIC-SCORING-CORE-1.md
+- docs/SCORING_ALGORITHMS.md
+
+Task:
+- harden `src/strategy/scoring_v1.py`
+- keep formulas deterministic and explainable
+- add breakdown fields for every term
+- improve tests in `tests/test_scoring_v1.py`
+- do not add live trading code
+- do not add hidden ML or opaque weighting
+- preserve tiny-capital focus and honest missing-data handling
+
+Required output:
+1. changed files
+2. short summary
+3. exact test commands run
+4. test results

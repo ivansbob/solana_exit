@@ -1,0 +1,14 @@
+Implement `PR-026-DOLLAR-AWARE-EXITS-AND-FAILED-TX-DRAG-1` from `PRS/PR-026-DOLLAR-AWARE-EXITS-AND-FAILED-TX-DRAG-1.md`.
+
+Constraints:
+- Keep deterministic logic only.
+- Prefer pessimistic tiny-capital realism over optimistic assumptions.
+- Reuse the current architecture style.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- executable dollar/SOL-aware exit helper(s)
+- failed transaction fee drag in simulation
+- distinction between gross and executable net PnL
+- updated docs
+- green tests

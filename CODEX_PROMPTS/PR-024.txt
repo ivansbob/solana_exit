@@ -1,0 +1,15 @@
+Implement `PR-024-SOLANA-NETWORK-REALISM-1` from `PRS/PR-024-SOLANA-NETWORK-REALISM-1.md`.
+
+Constraints:
+- Keep realism pessimistic, not optimistic.
+- Do not hardcode fragile magic constants without wrapping them in defaults/config and documenting assumptions.
+- Paper/replay only; no live execution.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- ATA rent drag modeling on first entry
+- optional rent reclaim on full exit assumptions
+- failed transaction fee drag
+- clearer simulator cost breakdowns
+- updated docs
+- green tests

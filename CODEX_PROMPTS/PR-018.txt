@@ -1,0 +1,13 @@
+Implement `PR-018-ORDERFLOW-PURITY-AND-GHOST-BIDS-1` from `PRS/PR-018-ORDERFLOW-PURITY-AND-GHOST-BIDS-1.md`.
+
+Constraints:
+- Keep the repo free-first and replay-first.
+- Do not add live auto-trading.
+- Preserve deterministic scoring and current test style.
+- Add/adjust unit tests so `pytest -q` passes.
+- Prefer small, explicit helpers over hidden heuristics.
+
+Deliverables:
+- route analyzer wired into the bootstrap code path
+- updated docs
+- green tests

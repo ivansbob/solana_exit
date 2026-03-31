@@ -1,0 +1,14 @@
+Implement `PR-029-TRACEABILITY-AND-EXPERIMENT-TRACKING-1` from `PRS/PR-029-TRACEABILITY-AND-EXPERIMENT-TRACKING-1.md`.
+
+Constraints:
+- Keep the implementation lightweight and deterministic.
+- Do not introduce heavyweight infra or paid services.
+- Focus on decision reconstruction and replay experiment bookkeeping.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- structured decision trace output
+- simple experiment log support
+- reproducible replay metadata capture
+- updated docs
+- green tests

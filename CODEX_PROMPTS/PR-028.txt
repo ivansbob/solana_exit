@@ -1,0 +1,14 @@
+Implement `PR-028-LIQUIDITY-CLIFF-AND-STALE-DATA-1` from `PRS/PR-028-LIQUIDITY-CLIFF-AND-STALE-DATA-1.md`.
+
+Constraints:
+- Keep deterministic logic only.
+- Preserve explainability.
+- Prefer pessimistic handling of stale/conflicting data.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- size-ladder liquidity cliff checks
+- stronger stale-data penalties
+- source-conflict awareness
+- updated docs
+- green tests

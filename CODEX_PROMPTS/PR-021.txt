@@ -1,0 +1,13 @@
+Implement `PR-021-MICRO-CAPITAL-JITO-REALISM-1` from `PRS/PR-021-MICRO-CAPITAL-JITO-REALISM-1.md`.
+
+Constraints:
+- Keep tiny-capital realism conservative.
+- Separate chain fee, priority fee, and tip hurdle concepts clearly.
+- Avoid any live execution integration.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- scoring penalty for tip hurdle
+- simulator fee drag outputs
+- updated docs
+- green tests

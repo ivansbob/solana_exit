@@ -1,0 +1,16 @@
+Implement `PR-022-EXIT-REALISM-AND-HARD-STOPS-1` from `PRS/PR-022-EXIT-REALISM-AND-HARD-STOPS-1.md`.
+
+Constraints:
+- Keep the current architecture style intact.
+- Use deterministic logic only.
+- Do not remove existing exit logic; refine and extend it.
+- Keep thresholds configurable.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- net executable PnL helper in exit logic
+- hard stop-loss support
+- net-PnL-aware take-profit behavior
+- smarter handling of dynamic-liquidity routes and underwater smart-money reference holders
+- updated docs
+- green tests

@@ -1,0 +1,13 @@
+version: 1
+default_enabled: false
+max_total_weight: 0.10
+heuristics:
+  - name: coordinated_smart_wallet_entry
+    regime: TREND
+    max_weight: 0.04
+  - name: fast_volume_reclaim
+    regime: SCALP
+    max_weight: 0.03
+  - name: dev_sell_distribution_warning
+    regime: ANY
+    max_weight: 0.03

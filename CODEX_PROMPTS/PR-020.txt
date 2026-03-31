@@ -1,0 +1,13 @@
+Implement `PR-020-ANTI-SPOOFING-AND-HOOK-SHIELD-1` from `PRS/PR-020-ANTI-SPOOFING-AND-HOOK-SHIELD-1.md`.
+
+Constraints:
+- Keep signer-verification logic explicit and explainable.
+- Keep Transfer Hook handling conservative by default.
+- Avoid claiming the Dune scaffold is production-complete.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- updated candidate contract
+- updated gates
+- signer-verification scaffold query
+- green tests

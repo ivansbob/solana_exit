@@ -1,0 +1,24 @@
+Implement `PR-015-DIP-REGIME-AND-EXIT-MANAGER-1`.
+
+Constraints:
+- No live trading.
+- Keep rules deterministic; no ML.
+- Do not remove `SCALP` / `TREND`; add `DIP` cleanly.
+
+Required outcomes:
+1. `RegimeClassifier` can emit `DIP`.
+2. Add `DynamicExitManager` with time-stop, panic-exit, and momentum-decay rules.
+3. Add fields required for DIP and exit realism to the data contract.
+4. Tests cover DIP classification and exit behavior.
+
+Edit at least:
+- `src/strategy/types.py`
+- `src/strategy/regime_classifier.py`
+- `src/strategy/exit_manager.py`
+- `tests/test_strategy_upgrade_v2.py`
+- `docs/EXECUTION_AND_EXIT_UPGRADES.md`
+
+Return:
+- changed files
+- why each rule exists
+- exact test commands run

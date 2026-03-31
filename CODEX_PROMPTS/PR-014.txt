@@ -1,0 +1,26 @@
+Implement `PR-014-ORDERFLOW-AND-SYBIL-SHIELD-1`.
+
+Constraints:
+- Keep the repo deterministic and lightweight.
+- No live trading.
+- Preserve existing baseline files unless the change clearly belongs in v2.
+- Prefer small, testable helpers.
+
+Required outcomes:
+1. Preferred scoring path uses `taker_buy_volume_usd` / `taker_sell_volume_usd`.
+2. Gates reject `jupiter_sell_impact_bps` asymmetry beyond default thresholds.
+3. Gates reject high `sybil_cluster_share_pct`.
+4. `volume_authenticity_ratio` can zero the v2 score.
+5. Tests pass.
+
+Edit at least:
+- `src/strategy/types.py`
+- `src/strategy/execution_gates.py`
+- `src/strategy/scoring_v2.py`
+- `tests/test_strategy_upgrade_v2.py`
+- `docs/SCORING_ALGORITHMS.md`
+
+Return:
+- changed files
+- why each change exists
+- exact test commands run

@@ -1,0 +1,16 @@
+-- PR-025 placeholder query: sleeping_sniper_overhang
+--
+-- Goal:
+-- Estimate how much supply was accumulated by very early buyers within the first few seconds
+-- or blocks after launch and remains unsold, together with an unrealized-gain proxy.
+--
+-- This is intentionally a research placeholder. Exact implementation depends on launch source,
+-- pool-discovery logic, and how launch-time windows are normalized in the surrounding pipeline.
+--
+-- Suggested outputs:
+-- token_address
+-- early_buyer_window_seconds
+-- retained_supply_pct
+-- unrealized_gain_pct
+-- overhang_quality_flag
+-- source_freshness_flag

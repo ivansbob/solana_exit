@@ -1,0 +1,15 @@
+Implement `PR-023-MATH-BOUNDARIES-AND-ZOMBIE-FILTER-1` from `PRS/PR-023-MATH-BOUNDARIES-AND-ZOMBIE-FILTER-1.md`.
+
+Constraints:
+- Keep the deterministic scorer approach.
+- No ML replacement.
+- Preserve explainability.
+- Keep thresholds configurable.
+- Add/adjust unit tests so `pytest -q` passes.
+
+Deliverables:
+- liquidity-aware dynamic floor for micro-volume z-score
+- zombie-token filter
+- clarified EOA concentration semantics
+- updated docs
+- green tests
