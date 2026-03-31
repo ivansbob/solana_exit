@@ -35,6 +35,7 @@ class CandidateSnapshot:
     estimated_total_fee_sol: float = 0.0
     round_trip_fee_sol: float = 0.0
     jito_tip_hurdle_sol: float = 0.0
+    failed_attempt_fee_sol: float = 0.0
     freshness_age_seconds: int = 999999
     pair_age_seconds: int = 0
     amm_reserve_drift_ratio: float = 0.0

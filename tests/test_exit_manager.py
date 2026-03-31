@@ -58,6 +58,19 @@ def test_dynamic_liquidity_haircut_reduces_executable_pnl():
     assert with_dynamic < without_dynamic
 
 
+def test_net_executable_pnl_is_lower_than_gross_when_sell_impact_is_high():
+    manager = DynamicExitManager()
+    position = PositionState(regime="SCALP", age_seconds=45, unrealized_pnl_pct=0.12, position_notional_sol=0.04)
+    current = make_candidate(jupiter_sell_impact_bps=130, route_uses_dynamic_liquidity_share=0.6)
+
+    gross_pct = manager.gross_mark_to_market_pnl_pct(position)
+    net_pct = manager.net_executable_pnl_pct(position, current)
+    net_sol = manager.net_executable_pnl_sol(position, current)
+
+    assert net_pct < gross_pct
+    assert net_sol < gross_pct * position.position_notional_sol
+
+
 def test_bagholder_penalty_makes_exit_more_defensive():
     manager = DynamicExitManager()
     position = PositionState(regime="DIP", age_seconds=10, unrealized_pnl_pct=0.08, position_notional_sol=1.0)

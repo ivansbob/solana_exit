@@ -69,6 +69,14 @@ class DynamicExitManager:
 
         return net_pnl_pct
 
+    def gross_mark_to_market_pnl_pct(self, position: PositionState) -> float:
+        """Mark-to-market PnL before execution frictions."""
+        return position.unrealized_pnl_pct
+
+    def net_executable_pnl_sol(self, position: PositionState, current: CandidateSnapshot) -> float:
+        """Absolute executable PnL in SOL for tiny-capital realism."""
+        return self.net_executable_pnl_pct(position, current) * max(position.position_notional_sol, 1e-9)
+
     def evaluate(self, position: PositionState, current: CandidateSnapshot) -> ExitDecision:
         thresholds = self.thresholds
         net_pnl_pct = self.net_executable_pnl_pct(position, current)
