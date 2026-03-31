@@ -36,8 +36,14 @@ class ExitThresholds:
     trend_time_stop_max_pnl_pct: float = 0.0
     trend_take_profit_net_pct: float = 0.30
     dynamic_liquidity_haircut_multiplier: float = 0.35
+    low_upside_liquidity_haircut_multiplier: float = 0.50
+    dynamic_route_high_share: float = 0.60
     bagholder_underwater_distance_pct: float = -0.25
     bagholder_penalty_pct: float = 0.03
+    sleeping_sniper_overhang_danger_pct: float = 0.12
+    sleeping_sniper_unrealized_gain_danger_pct: float = 1.50
+    overhang_penalty_pct: float = 0.03
+    unknown_overhang_penalty_pct: float = 0.01
 
 
 class DynamicExitManager:
@@ -47,9 +53,18 @@ class DynamicExitManager:
     def net_executable_pnl_pct(self, position: PositionState, current: CandidateSnapshot) -> float:
         """Estimate executable PnL after impact, dynamic-liquidity haircut, and fee drag."""
         sell_impact_pct = current.jupiter_sell_impact_bps / 10000.0
+        dynamic_route_share = max(0.0, min(current.route_uses_dynamic_liquidity_share, 1.0))
         dynamic_liquidity_haircut_pct = (
-            current.route_uses_dynamic_liquidity_share * sell_impact_pct * self.thresholds.dynamic_liquidity_haircut_multiplier
+            dynamic_route_share * sell_impact_pct * self.thresholds.dynamic_liquidity_haircut_multiplier
         )
+        upside_liquidity_density = current.upside_liquidity_density
+        low_upside_liquidity_haircut_pct = 0.0
+        if upside_liquidity_density is not None:
+            low_upside_liquidity_haircut_pct = (
+                dynamic_route_share
+                * max(0.0, 1.0 - max(0.0, min(upside_liquidity_density, 1.0)))
+                * self.thresholds.low_upside_liquidity_haircut_multiplier
+            )
 
         notional_sol = max(position.position_notional_sol, 1e-9)
         fee_drag_pct = (
@@ -59,13 +74,32 @@ class DynamicExitManager:
             + position.expected_exit_fee_sol
         ) / notional_sol
 
-        net_pnl_pct = position.unrealized_pnl_pct - sell_impact_pct - dynamic_liquidity_haircut_pct - fee_drag_pct
+        net_pnl_pct = (
+            position.unrealized_pnl_pct
+            - sell_impact_pct
+            - dynamic_liquidity_haircut_pct
+            - low_upside_liquidity_haircut_pct
+            - fee_drag_pct
+        )
 
         if (
             current.distance_from_smart_entry_pct <= self.thresholds.bagholder_underwater_distance_pct
             or current.smart_money_reference_pnl_pct <= self.thresholds.bagholder_underwater_distance_pct
         ):
             net_pnl_pct -= self.thresholds.bagholder_penalty_pct
+
+        overhang_pct = current.sleeping_sniper_overhang_pct
+        overhang_gain_pct = current.sleeping_sniper_unrealized_gain_pct
+        overhang_unknown = overhang_pct is None or overhang_gain_pct is None
+        if overhang_unknown and dynamic_route_share >= self.thresholds.dynamic_route_high_share:
+            # Missing data honesty: unknown retained overhang is treated as uncertainty, not as safety.
+            net_pnl_pct -= self.thresholds.unknown_overhang_penalty_pct
+        elif not overhang_unknown:
+            if (
+                overhang_pct >= self.thresholds.sleeping_sniper_overhang_danger_pct
+                and overhang_gain_pct >= self.thresholds.sleeping_sniper_unrealized_gain_danger_pct
+            ):
+                net_pnl_pct -= self.thresholds.overhang_penalty_pct
 
         return net_pnl_pct
 

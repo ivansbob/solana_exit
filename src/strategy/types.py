@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass(slots=True)
@@ -76,3 +77,6 @@ class CandidateSnapshot:
     # Exit and replay realism
     smart_money_distribution_rate: float = 0.0
     volume_decay_z: float = 0.0
+    upside_liquidity_density: Optional[float] = None
+    sleeping_sniper_overhang_pct: Optional[float] = None
+    sleeping_sniper_unrealized_gain_pct: Optional[float] = None

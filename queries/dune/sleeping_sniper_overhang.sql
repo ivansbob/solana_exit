@@ -14,3 +14,18 @@
 -- unrealized_gain_pct
 -- overhang_quality_flag
 -- source_freshness_flag
+
+-- Skeleton to keep downstream interfaces explicit while implementation is pending:
+WITH params AS (
+    SELECT
+        CAST(30 AS INTEGER) AS early_buyer_window_seconds
+)
+SELECT
+    CAST(NULL AS VARCHAR) AS token_address,
+    p.early_buyer_window_seconds,
+    CAST(NULL AS DOUBLE) AS retained_supply_pct,
+    CAST(NULL AS DOUBLE) AS unrealized_gain_pct,
+    CAST('research_placeholder' AS VARCHAR) AS overhang_quality_flag,
+    CAST('unknown' AS VARCHAR) AS source_freshness_flag
+FROM params p
+WHERE 1 = 0;
