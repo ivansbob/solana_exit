@@ -25,6 +25,17 @@ class OpportunityScorerV2:
     TREND_THRESHOLD = 1.40
     DIP_THRESHOLD = 1.18
 
+    def __init__(
+        self,
+        *,
+        micro_z_min_std_floor_usd_per_min: float = 2.0,
+        micro_z_baseline_floor_ratio: float = 0.12,
+        micro_z_liquidity_reference_usd: float = 12000.0,
+    ) -> None:
+        self.micro_z_min_std_floor_usd_per_min = micro_z_min_std_floor_usd_per_min
+        self.micro_z_baseline_floor_ratio = micro_z_baseline_floor_ratio
+        self.micro_z_liquidity_reference_usd = micro_z_liquidity_reference_usd
+
     def score(self, c: CandidateSnapshot, regime: str) -> ScoreBreakdownV2:
         micro_vol_accel_z = self._micro_vol_accel_z(c)
         taker_imbalance_score = self._taker_imbalance_score(c)
@@ -102,8 +113,14 @@ class OpportunityScorerV2:
     def _micro_vol_accel_z(self, c: CandidateSnapshot) -> float:
         baseline = c.mean_volume_5m_per_min_usd or max(c.mean_volume_1h_usd / 60.0, 1.0)
         std = c.std_volume_5m_per_min_usd or max(c.std_volume_1h_usd / 60.0, 1.0)
-        z = (c.volume_1m_usd - baseline) / max(std, 1.0)
+        z = (c.volume_1m_usd - baseline) / max(std, self._dynamic_micro_volume_std_floor(c, baseline))
         return max(0.0, min(3.0, z))
+
+    def _dynamic_micro_volume_std_floor(self, c: CandidateSnapshot, baseline: float) -> float:
+        liquidity = max(c.liquidity_usd, 1.0)
+        liquidity_penalty = max(1.0, self.micro_z_liquidity_reference_usd / liquidity)
+        baseline_floor = baseline * self.micro_z_baseline_floor_ratio * liquidity_penalty
+        return max(self.micro_z_min_std_floor_usd_per_min, baseline_floor)
 
     def _taker_imbalance_score(self, c: CandidateSnapshot) -> float:
         buy = max(0.0, c.taker_buy_volume_usd)
@@ -134,7 +151,12 @@ class OpportunityScorerV2:
         return round((0.50 * liq_score + 0.35 * sell_score + 0.15 * base_amm_bonus), 6)
 
     def _concentration_penalty(self, c: CandidateSnapshot) -> float:
-        return max(0.0, c.top_wallet_concentration - 0.35) * 3.0
+        return max(0.0, self._eoa_concentration(c) - 0.35) * 3.0
+
+    def _eoa_concentration(self, c: CandidateSnapshot) -> float:
+        if c.eoa_wallet_concentration > 0:
+            return c.eoa_wallet_concentration
+        return c.top_wallet_concentration
 
     def _oracle_divergence_score(self, c: CandidateSnapshot) -> float:
         bps = abs(c.oracle_divergence_bps)

@@ -22,11 +22,13 @@ class TinyCapitalRiskGates:
         max_jito_tip_hurdle_sol: float = 0.0020,
         max_priority_fee_lamports: int = 8000,
         max_local_pool_priority_fee_lamports: int = 50000,
-        max_top_wallet_concentration: float = 0.35,
+        max_eoa_wallet_concentration: float = 0.35,
         max_freshness_age_seconds: int = 180,
         max_rugcheck_risk_score: int = 5000,
         max_sybil_cluster_share_pct: float = 25.0,
         min_pool_age_seconds_for_breakout: int = 300,
+        zombie_min_pool_age_seconds: int = 86400,
+        zombie_max_baseline_volume_1m_usd: float = 25.0,
         max_block_0_snipe_pct: float = 15.0,
         min_lp_burn_ratio_pct: float = 99.0,
         min_signed_buy_ratio: float = 0.95,
@@ -42,11 +44,13 @@ class TinyCapitalRiskGates:
         self.max_jito_tip_hurdle_sol = max_jito_tip_hurdle_sol
         self.max_priority_fee_lamports = max_priority_fee_lamports
         self.max_local_pool_priority_fee_lamports = max_local_pool_priority_fee_lamports
-        self.max_top_wallet_concentration = max_top_wallet_concentration
+        self.max_eoa_wallet_concentration = max_eoa_wallet_concentration
         self.max_freshness_age_seconds = max_freshness_age_seconds
         self.max_rugcheck_risk_score = max_rugcheck_risk_score
         self.max_sybil_cluster_share_pct = max_sybil_cluster_share_pct
         self.min_pool_age_seconds_for_breakout = min_pool_age_seconds_for_breakout
+        self.zombie_min_pool_age_seconds = zombie_min_pool_age_seconds
+        self.zombie_max_baseline_volume_1m_usd = zombie_max_baseline_volume_1m_usd
         self.max_block_0_snipe_pct = max_block_0_snipe_pct
         self.min_lp_burn_ratio_pct = min_lp_burn_ratio_pct
         self.min_signed_buy_ratio = min_signed_buy_ratio
@@ -76,8 +80,10 @@ class TinyCapitalRiskGates:
             return GateDecision(False, "priority_fee_too_high")
         if c.local_pool_p75_priority_fee_lamports > self.max_local_pool_priority_fee_lamports:
             return GateDecision(False, "local_pool_priority_fee_too_high")
-        if c.top_wallet_concentration > self.max_top_wallet_concentration:
+        if self._eoa_concentration(c) > self.max_eoa_wallet_concentration:
             return GateDecision(False, "holder_concentration_too_high")
+        if self._is_zombie_token(c):
+            return GateDecision(False, "zombie_token_inactive_baseline")
         if c.freshness_age_seconds > self.max_freshness_age_seconds:
             return GateDecision(False, "stale_candidate")
         if c.amm_reserve_drift_ratio > self.max_amm_reserve_drift_ratio:
@@ -111,3 +117,12 @@ class TinyCapitalRiskGates:
         if regime == "TREND" and c.base_amm_liquidity_share < self.min_base_amm_liquidity_share_for_trend:
             return GateDecision(False, "base_amm_liquidity_share_too_low_for_trend")
         return GateDecision(True, "passed")
+
+    def _eoa_concentration(self, c: CandidateSnapshot) -> float:
+        if c.eoa_wallet_concentration > 0:
+            return c.eoa_wallet_concentration
+        return c.top_wallet_concentration
+
+    def _is_zombie_token(self, c: CandidateSnapshot) -> bool:
+        baseline_1m = c.mean_volume_5m_per_min_usd or (c.mean_volume_1h_usd / 60.0)
+        return c.pair_age_seconds >= self.zombie_min_pool_age_seconds and baseline_1m <= self.zombie_max_baseline_volume_1m_usd

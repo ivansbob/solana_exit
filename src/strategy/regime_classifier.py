@@ -11,11 +11,22 @@ class RegimeDecision:
 
 
 class RegimeClassifier:
+    def __init__(
+        self,
+        *,
+        zombie_min_pool_age_seconds: int = 86400,
+        zombie_max_baseline_volume_1m_usd: float = 25.0,
+    ) -> None:
+        self.zombie_min_pool_age_seconds = zombie_min_pool_age_seconds
+        self.zombie_max_baseline_volume_1m_usd = zombie_max_baseline_volume_1m_usd
+
     def classify(self, c: CandidateSnapshot) -> RegimeDecision:
         if c.jupiter_price_impact_bps > 40 or c.liquidity_usd < 8000:
             return RegimeDecision("IGNORE", 0.95, "execution_unfriendly")
         if c.rugcheck_status.lower() in {"danger", "scam"}:
             return RegimeDecision("IGNORE", 0.99, "anti_rug_failed")
+        if self._is_zombie_token(c):
+            return RegimeDecision("IGNORE", 0.97, "zombie_token_inactive_baseline")
 
         macro_risk = c.sol_15m_trend_bps < -50
 
@@ -58,3 +69,7 @@ class RegimeClassifier:
             return RegimeDecision("TREND", confidence, "sustained_follow_through")
 
         return RegimeDecision("IGNORE", 0.80, "insufficient_edge")
+
+    def _is_zombie_token(self, c: CandidateSnapshot) -> bool:
+        baseline_1m = c.mean_volume_5m_per_min_usd or (c.mean_volume_1h_usd / 60.0)
+        return c.pair_age_seconds >= self.zombie_min_pool_age_seconds and baseline_1m <= self.zombie_max_baseline_volume_1m_usd

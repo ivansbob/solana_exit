@@ -58,6 +58,9 @@ class CandidateSnapshot:
 
     # Holder / wallet intelligence
     top_wallet_concentration: float = 0.0
+    # Concentration across externally owned addresses (EOA) only.
+    # Excludes pool/PDA/system vault addresses to avoid false whale concentration.
+    eoa_wallet_concentration: float = 0.0
     wallet_cohort_score: float = 0.0
     smart_wallet_coord_score: float = 0.0
     accumulation_conviction: float = 0.0
