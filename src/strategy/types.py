@@ -40,6 +40,8 @@ class CandidateSnapshot:
     amm_reserve_drift_ratio: float = 0.0
     base_amm_liquidity_share: float = 1.0
     route_uses_dynamic_liquidity_share: float = 0.0
+    estimated_exit_fee_sol: float = 0.0
+    dynamic_liquidity_stress: float = 0.0
 
     # Safety / anti-rug / anti-manipulation
     rugcheck_status: str = "unknown"
@@ -61,6 +63,7 @@ class CandidateSnapshot:
     accumulation_conviction: float = 0.0
     holder_growth_24h_pct: float = 0.0
     distance_from_smart_entry_pct: float = 0.0
+    smart_money_reference_pnl_pct: float = 0.0
     signed_buy_ratio: float = 1.0
 
     # Regime context
