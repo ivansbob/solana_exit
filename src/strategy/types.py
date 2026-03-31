@@ -43,6 +43,12 @@ class CandidateSnapshot:
     estimated_exit_fee_sol: float = 0.0
     dynamic_liquidity_stress: float = 0.0
 
+    # Solana network realism assumptions (paper/replay)
+    assume_no_existing_ata: bool = False
+    ata_rent_exempt_sol: float = 0.00203928
+    reclaim_ata_rent_on_full_exit: bool = False
+    failed_tx_base_fee_sol: float = 0.000005
+
     # Safety / anti-rug / anti-manipulation
     rugcheck_status: str = "unknown"
     rugcheck_risk_score: int = 0

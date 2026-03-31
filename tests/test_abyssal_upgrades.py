@@ -102,5 +102,6 @@ def test_mev_simulator_applies_adverse_selection_and_fee_drag():
         amm_reserve_drift_ratio=0.03,
     )
     assert sim.failed_fill_probability > 0.35
-    assert sim.fee_drag_sol == 0.0015
+    assert sim.fee_drag_sol > 0.0015
+    assert sim.network_cost_breakdown_sol["failed_tx_fee_drag_sol"] > 0.0
     assert sim.status_bias in {"ADVERSE_SELECTION_UP", "CACHE_LAG_RISK", "MEV_CONTESTED"}
